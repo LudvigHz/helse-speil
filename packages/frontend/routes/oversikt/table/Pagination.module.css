@@ -1,9 +1,17 @@
+.PaginationContainer {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgb(255 255 255 / 0) 0%, rgb(255 255 255 / 1) 50%);
+}
+
 .Pagination {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 1rem;
-    flex-shrink: 0;
+    margin-top: 3rem;
+    pointer-events: auto;
 }
 
 .Pagination :global(.navds-pagination--invisible) {
