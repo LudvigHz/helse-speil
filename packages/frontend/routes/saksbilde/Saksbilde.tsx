@@ -16,6 +16,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { onLazyLoadFail } from '@utils/error';
 import { isBeregnetPeriode } from '@utils/typeguards';
 
+import { TingIToppenTing } from './TingIToppen/TingIToppen';
 import { VenterPåEndringProvider } from './VenterPåEndringContext';
 import { PersonHeader } from './personHeader';
 import { Timeline } from './timeline';
@@ -38,7 +39,6 @@ export const Saksbilde = () => (
         <SaksbildeContent />
     </ErrorBoundary>
 );
-
 const SaksbildeContent = () => {
     useRefreshPersonVedOpptegnelse();
     useFjernPersonFraApolloCache();
@@ -51,6 +51,7 @@ const SaksbildeContent = () => {
 
     return (
         <div className={styles.Saksbilde}>
+            <TingIToppenTing />
             <PersonHeader />
             <Timeline />
             <AmplitudeProvider>

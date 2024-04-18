@@ -1,0 +1,10 @@
+.untatt {
+    grid-area: untatt;
+    display: flex;
+    height: min-content;
+    box-sizing: border-box;
+    border: 1px solid var(--a-border-strong);
+    color: var(--a-text-default);
+    white-space: nowrap;
+    min-width: max-content;
+}
