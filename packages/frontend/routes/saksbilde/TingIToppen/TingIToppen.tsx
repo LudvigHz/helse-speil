@@ -22,7 +22,7 @@ const TingIToppen: React.FC = () => {
         return <div />;
     }
 
-    if (currentPerson.personinfo.unntattFraAutomatiskGodkjenning) {
+    if (currentPerson.personinfo.unntattFraAutomatisering.erUntatt) {
         return <UnntattFraAutomatisering />;
     }
 
