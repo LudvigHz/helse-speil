@@ -125,6 +125,16 @@ export type AvsenderSystem = {
     versjon?: Maybe<Scalars['String']['output']>;
 };
 
+export type AvslagInput = {
+    begrunnelse: Scalars['String']['input'];
+    type: Avslagstype;
+};
+
+export enum Avslagstype {
+    Avslag = 'AVSLAG',
+    DelvisAvslag = 'DELVIS_AVSLAG',
+}
+
 export enum Begrunnelse {
     Andreytelser = 'ANDREYTELSER',
     EgenmeldingUtenforArbeidsgiverperiode = 'EGENMELDING_UTENFOR_ARBEIDSGIVERPERIODE',
@@ -509,6 +519,7 @@ export type Mutation = {
     leggTilKommentar?: Maybe<Kommentar>;
     leggTilNotat?: Maybe<Notat>;
     oppdaterPerson: Scalars['Boolean']['output'];
+    opphevStans: Scalars['Boolean']['output'];
     opprettAbonnement: Scalars['Boolean']['output'];
     opprettTildeling?: Maybe<Tildeling>;
     overstyrArbeidsforhold: Scalars['Boolean']['output'];
@@ -546,6 +557,7 @@ export type MutationFjernTildelingArgs = {
 };
 
 export type MutationInnvilgVedtakArgs = {
+    avslag?: InputMaybe<AvslagInput>;
     oppgavereferanse: Scalars['String']['input'];
 };
 
@@ -572,6 +584,11 @@ export type MutationLeggTilNotatArgs = {
 };
 
 export type MutationOppdaterPersonArgs = {
+    fodselsnummer: Scalars['String']['input'];
+};
+
+export type MutationOpphevStansArgs = {
+    arsak: Scalars['String']['input'];
     fodselsnummer: Scalars['String']['input'];
 };
 
@@ -922,7 +939,7 @@ export type Personinfo = {
     kjonn: Kjonn;
     mellomnavn?: Maybe<Scalars['String']['output']>;
     reservasjon?: Maybe<Reservasjon>;
-    unntattFraAutomatisering: UnntattFraAutomatiskGodkjenning;
+    unntattFraAutomatisering?: Maybe<UnntattFraAutomatiskGodkjenning>;
 };
 
 export type Personnavn = {
@@ -1379,7 +1396,7 @@ export type UberegnetVilkarsprovdPeriode = Periode & {
 export type UnntattFraAutomatiskGodkjenning = {
     __typename?: 'UnntattFraAutomatiskGodkjenning';
     arsaker: Array<Scalars['String']['output']>;
-    erUntatt: Scalars['Boolean']['output'];
+    erUnntatt: Scalars['Boolean']['output'];
     tidspunkt?: Maybe<Scalars['String']['output']>;
 };
 
@@ -2155,12 +2172,12 @@ export type FetchPersonQuery = {
             fodselsdato?: string | null;
             kjonn: Kjonn;
             reservasjon?: { __typename?: 'Reservasjon'; kanVarsles: boolean; reservert: boolean } | null;
-            unntattFraAutomatisering: {
+            unntattFraAutomatisering?: {
                 __typename?: 'UnntattFraAutomatiskGodkjenning';
-                erUntatt: boolean;
+                erUnntatt: boolean;
                 arsaker: Array<string>;
                 tidspunkt?: string | null;
-            };
+            } | null;
         };
         tildeling?: { __typename?: 'Tildeling'; navn: string; epost: string; oid: string } | null;
         vilkarsgrunnlag: Array<
@@ -3039,6 +3056,7 @@ export type SettVarselStatusMutation = {
 
 export type InnvilgVedtakMutationVariables = Exact<{
     oppgavereferanse: Scalars['String']['input'];
+    avslag?: InputMaybe<AvslagInput>;
 }>;
 
 export type InnvilgVedtakMutation = { __typename?: 'Mutation'; innvilgVedtak: boolean };
@@ -4948,7 +4966,7 @@ export const FetchPersonDocument = {
                                                 selectionSet: {
                                                     kind: 'SelectionSet',
                                                     selections: [
-                                                        { kind: 'Field', name: { kind: 'Name', value: 'erUntatt' } },
+                                                        { kind: 'Field', name: { kind: 'Name', value: 'erUnntatt' } },
                                                         { kind: 'Field', name: { kind: 'Name', value: 'arsaker' } },
                                                         { kind: 'Field', name: { kind: 'Name', value: 'tidspunkt' } },
                                                     ],
@@ -7358,6 +7376,11 @@ export const InnvilgVedtakDocument = {
                     variable: { kind: 'Variable', name: { kind: 'Name', value: 'oppgavereferanse' } },
                     type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
                 },
+                {
+                    kind: 'VariableDefinition',
+                    variable: { kind: 'Variable', name: { kind: 'Name', value: 'avslag' } },
+                    type: { kind: 'NamedType', name: { kind: 'Name', value: 'AvslagInput' } },
+                },
             ],
             selectionSet: {
                 kind: 'SelectionSet',
@@ -7370,6 +7393,11 @@ export const InnvilgVedtakDocument = {
                                 kind: 'Argument',
                                 name: { kind: 'Name', value: 'oppgavereferanse' },
                                 value: { kind: 'Variable', name: { kind: 'Name', value: 'oppgavereferanse' } },
+                            },
+                            {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'avslag' },
+                                value: { kind: 'Variable', name: { kind: 'Name', value: 'avslag' } },
                             },
                         ],
                     },

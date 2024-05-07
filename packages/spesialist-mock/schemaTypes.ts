@@ -123,6 +123,16 @@ export type AvsenderSystem = {
     versjon?: Maybe<Scalars['String']['output']>;
 };
 
+export type AvslagInput = {
+    begrunnelse: Scalars['String']['input'];
+    type: Avslagstype;
+};
+
+export enum Avslagstype {
+    Avslag = 'AVSLAG',
+    DelvisAvslag = 'DELVIS_AVSLAG',
+}
+
 export enum Begrunnelse {
     Andreytelser = 'ANDREYTELSER',
     EgenmeldingUtenforArbeidsgiverperiode = 'EGENMELDING_UTENFOR_ARBEIDSGIVERPERIODE',
@@ -507,6 +517,7 @@ export type Mutation = {
     leggTilKommentar?: Maybe<Kommentar>;
     leggTilNotat?: Maybe<Notat>;
     oppdaterPerson: Scalars['Boolean']['output'];
+    opphevStans: Scalars['Boolean']['output'];
     opprettAbonnement: Scalars['Boolean']['output'];
     opprettTildeling?: Maybe<Tildeling>;
     overstyrArbeidsforhold: Scalars['Boolean']['output'];
@@ -544,6 +555,7 @@ export type MutationFjernTildelingArgs = {
 };
 
 export type MutationInnvilgVedtakArgs = {
+    avslag?: InputMaybe<AvslagInput>;
     oppgavereferanse: Scalars['String']['input'];
 };
 
@@ -570,6 +582,11 @@ export type MutationLeggTilNotatArgs = {
 };
 
 export type MutationOppdaterPersonArgs = {
+    fodselsnummer: Scalars['String']['input'];
+};
+
+export type MutationOpphevStansArgs = {
+    arsak: Scalars['String']['input'];
     fodselsnummer: Scalars['String']['input'];
 };
 
@@ -920,7 +937,7 @@ export type Personinfo = {
     kjonn: Kjonn;
     mellomnavn?: Maybe<Scalars['String']['output']>;
     reservasjon?: Maybe<Reservasjon>;
-    unntattFraAutomatisering: UnntattFraAutomatiskGodkjenning;
+    unntattFraAutomatisering?: Maybe<UnntattFraAutomatiskGodkjenning>;
 };
 
 export type Personnavn = {
@@ -1377,7 +1394,7 @@ export type UberegnetVilkarsprovdPeriode = Periode & {
 export type UnntattFraAutomatiskGodkjenning = {
     __typename?: 'UnntattFraAutomatiskGodkjenning';
     arsaker: Array<Scalars['String']['output']>;
-    erUntatt: Scalars['Boolean']['output'];
+    erUnntatt: Scalars['Boolean']['output'];
     tidspunkt?: Maybe<Scalars['String']['output']>;
 };
 
