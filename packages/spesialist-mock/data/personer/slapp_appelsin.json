@@ -18,7 +18,7 @@
                 "reservasjon": null,
                 "unntattFraAutomatisering": {
                     "erUnntatt": true,
-                    "arsaker": ["MEDISINSK_VILKAR"],
+                    "arsaker": ["MEDISINSK_VILKAR", "AKTIVITETSKRAV"],
                     "tidspunkt": "2024-22-04T12:00:00"
                 }
             },

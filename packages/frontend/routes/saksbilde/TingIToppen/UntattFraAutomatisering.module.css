@@ -1,5 +1,5 @@
-.untatt {
-    grid-area: untatt;
+.unntatt {
+    grid-area: unntatt;
     display: flex;
     height: min-content;
     box-sizing: border-box;
@@ -7,4 +7,21 @@
     color: var(--a-text-default);
     white-space: nowrap;
     min-width: max-content;
+}
+
+.luft {
+    margin: 8px 0;
+}
+
+.knapper {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.feilmelding {
+    color: var(--a-text-danger);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 0.625rem;
 }

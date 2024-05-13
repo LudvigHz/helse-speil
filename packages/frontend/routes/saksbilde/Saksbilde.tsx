@@ -17,7 +17,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { onLazyLoadFail } from '@utils/error';
 import { isBeregnetPeriode } from '@utils/typeguards';
 
-import { TingIToppenTing } from './TingIToppen/TingIToppen';
+import { InfovarselOmStans } from './TingIToppen/InfovarselOmStans';
 import { VenterPåEndringProvider } from './VenterPåEndringContext';
 import { PersonHeader } from './personHeader';
 import { Timeline } from './timeline';
@@ -52,7 +52,7 @@ const SaksbildeContent = () => {
 
     return (
         <div className={styles.Saksbilde}>
-            <TingIToppenTing />
+            <InfovarselOmStans />
             <PersonHeader />
             <Timeline />
             <AmplitudeProvider>
