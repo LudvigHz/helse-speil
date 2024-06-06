@@ -18,7 +18,7 @@ import {
 import { useHåndterOpptegnelser, useSetOpptegnelserPollingRate } from '@state/opptegnelser';
 import { useActivePeriod } from '@state/periode';
 import { useCurrentPerson } from '@state/person';
-import { useAddToast, useRemoveToast } from '@state/toasts';
+import { useAddToast, useRemoveToast } from '@store/features/toasts/useToasts';
 import { finnFørsteVedtaksperiodeIdPåSkjæringstidspunkt } from '@utils/sykefraværstilfelle';
 
 type OverstyrtArbeidsforholdGetter = (

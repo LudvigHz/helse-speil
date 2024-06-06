@@ -17,7 +17,7 @@ import {
 } from '@state/kalkuleringstoasts';
 import { erOpptegnelseForNyOppgave, useHåndterOpptegnelser, useSetOpptegnelserPollingRate } from '@state/opptegnelser';
 import { inntektOgRefusjonState } from '@state/overstyring';
-import { useAddToast, useRemoveToast } from '@state/toasts';
+import { useAddToast, useRemoveToast } from '@store/features/toasts/useToasts';
 
 interface PostOverstyrtInntektOgRefusjonResponse {
     isLoading: boolean;

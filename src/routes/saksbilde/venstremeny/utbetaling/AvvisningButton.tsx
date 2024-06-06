@@ -7,7 +7,7 @@ import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@components/ErrorMessage';
 import { AmplitudeContext } from '@io/amplitude';
 import { Handling, Periodehandling, TilInfoTrygdDocument } from '@io/graphql';
-import { useAddToast } from '@state/toasts';
+import { useAddToast } from '@store/features/toasts/useToasts';
 
 import { AvvisningModal, Avvisningsskjema } from './AvvisningModal';
 

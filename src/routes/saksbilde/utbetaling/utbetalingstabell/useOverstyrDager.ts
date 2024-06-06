@@ -19,7 +19,7 @@ import {
 } from '@state/kalkuleringstoasts';
 import { erOpptegnelseForNyOppgave, useHåndterOpptegnelser, useSetOpptegnelserPollingRate } from '@state/opptegnelser';
 import { useCurrentPerson } from '@state/person';
-import { useAddToast, useRemoveToast } from '@state/toasts';
+import { useAddToast, useRemoveToast } from '@store/features/toasts/useToasts';
 
 type UsePostOverstyringState = 'loading' | 'hasValue' | 'hasError' | 'initial' | 'timedOut' | 'done';
 

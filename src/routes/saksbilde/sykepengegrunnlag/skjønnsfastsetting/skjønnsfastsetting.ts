@@ -16,7 +16,7 @@ import {
     kalkuleringFerdigToast,
 } from '@state/kalkuleringstoasts';
 import { erOpptegnelseForNyOppgave, useHåndterOpptegnelser, useSetOpptegnelserPollingRate } from '@state/opptegnelser';
-import { useAddToast, useRemoveToast } from '@state/toasts';
+import { useAddToast, useRemoveToast } from '@store/features/toasts/useToasts';
 
 export enum Skjønnsfastsettingstype {
     OMREGNET_ÅRSINNTEKT = 'OMREGNET_ÅRSINNTEKT',

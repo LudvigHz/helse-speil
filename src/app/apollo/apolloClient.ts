@@ -1,9 +1,13 @@
 import { RestLink } from 'apollo-link-rest';
+import { nanoid } from 'nanoid';
 
 import possibletypes from '@/app/apollo/possibletypes';
 import { erLokal } from '@/env';
-import { ApolloClient, HttpLink, InMemoryCache, TypePolicies, from } from '@apollo/client';
+import { ApolloClient, ApolloLink, HttpLink, InMemoryCache, TypePolicies, from } from '@apollo/client';
+import { onError } from '@apollo/client/link/error';
 import { RetryLink } from '@apollo/client/link/retry';
+import { toastsSlice } from '@store/features/toasts/toastsSlice';
+import { AppStore } from '@store/store';
 
 const getTypePolicies = (): TypePolicies => {
     return {
@@ -56,9 +60,11 @@ const restLink = new RestLink({
     },
 });
 
-export const createApolloClient = () =>
+export const createApolloClient = (store: AppStore) =>
     new ApolloClient({
         link: from([
+            createErrorLink(store),
+            createVarselLink(store),
             restLink,
             new RetryLink({
                 attempts: { max: 5 },
@@ -71,3 +77,36 @@ export const createApolloClient = () =>
             typePolicies: getTypePolicies(),
         }),
     });
+
+const createVarselLink = (store: AppStore) =>
+    new ApolloLink((operation, forward) => {
+        const id = nanoid();
+        operation.setContext({ toastId: id });
+        if (operation.operationName === 'FetchPerson') {
+            store.dispatch(
+                toastsSlice.actions.addToast({
+                    key: id,
+                    message: 'Henter person',
+                    loading: true,
+                }),
+            );
+        }
+
+        const nextOperation = forward(operation);
+
+        nextOperation.forEach(() => {
+            if (operation.operationName === 'FetchPerson') {
+                store.dispatch(toastsSlice.actions.removeToast(id));
+            }
+        });
+
+        return nextOperation;
+    });
+
+function createErrorLink(store: AppStore) {
+    return onError(({ graphQLErrors, networkError, operation, forward }) => {
+        if (operation.operationName === 'FetchPerson') {
+            store.dispatch(toastsSlice.actions.removeByMessage('Henter person'));
+        }
+    });
+}

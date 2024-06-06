@@ -5,7 +5,6 @@ import { Search } from '@navikt/ds-react';
 
 import { useApolloClient, useLazyQuery } from '@apollo/client';
 import styles from '@components/header/Header.module.css';
-import { useLoadingToast } from '@hooks/useLoadingToast';
 import { FetchPersonDocument } from '@io/graphql';
 import { validFødselsnummer } from '@io/graphql/common';
 import { useAddVarsel, useRapporterGraphQLErrors } from '@state/varsler';
@@ -33,8 +32,6 @@ export const Personsøk: React.FC = () => {
             rapporterError(error.graphQLErrors);
         },
     });
-
-    useLoadingToast({ isLoading: loading, message: 'Henter person' });
 
     const searchRef = useRef<HTMLInputElement>(null);
 

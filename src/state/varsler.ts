@@ -5,16 +5,14 @@ import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 import { GraphQLErrors } from '@apollo/client/errors';
 import { FetchError, FlereFodselsnumreError, NotFoundError, ProtectedError } from '@io/graphql/errors';
 import { useFetchPersonQuery } from '@state/person';
+import { varslerSlice } from '@store/features/varsler/varslerSlice';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { SpeilError } from '@utils/error';
-
-const varslerState = atom<Array<SpeilError>>({
-    key: 'varslerState',
-    default: [],
-});
 
 export const useVarsler = (): Array<SpeilError> => {
     const params = useSearchParams();
     const { error } = useFetchPersonQuery();
+    const varsler = useAppSelector((state) => state.varsler);
 
     const errors: SpeilError[] =
         error?.graphQLErrors.map((error: GraphQLError) => {
@@ -37,7 +35,7 @@ export const useVarsler = (): Array<SpeilError> => {
             }
         }) ?? [];
 
-    return useRecoilValue(varslerState).concat(params.get('aktorId') !== undefined ? errors : []);
+    return varsler.concat(params.get('aktorId') !== undefined ? errors : []);
 };
 
 export const useRapporterGraphQLErrors = (): ((graphQLErrors: GraphQLErrors) => void) => {
@@ -69,32 +67,27 @@ export const useRapporterGraphQLErrors = (): ((graphQLErrors: GraphQLErrors) => 
 };
 
 export const useAddVarsel = (): ((varsel: SpeilError) => void) => {
-    const setVarsler = useSetRecoilState(varslerState);
+    const dispatch = useAppDispatch();
 
     return (varsel: SpeilError) => {
-        setVarsler((varsler) => [...varsler.filter((it) => it.name !== varsel.name), varsel]);
+        dispatch(varslerSlice.actions.leggTilVarsel(varsel));
     };
 };
 
 export const useOperationErrorHandler = (operasjon: string) => {
+    const dispatch = useAppDispatch();
     const varsel: SpeilError = new SpeilError(`Det oppstod en feil. Handlingen som ikke ble utført: ${operasjon}`);
-
-    const setVarsler = useSetRecoilState(varslerState);
 
     return (ex: Error) => {
         console.log(`Feil ved ${operasjon}. ${ex.message}`);
-        setVarsler((varsler) => [...varsler.filter((it) => it.name !== varsel.name), varsel]);
+        dispatch(varslerSlice.actions.leggTilVarsel(varsel));
     };
 };
 
 export const useRemoveVarsel = () => {
-    const setVarsler = useSetRecoilState(varslerState);
+    const dispatch = useAppDispatch();
 
     return (name: string) => {
-        setVarsler((varsler) => varsler.filter((it) => it.name !== name));
+        dispatch(varslerSlice.actions.fjernVarsel(name));
     };
-};
-
-export const useSetVarsler = () => {
-    return useSetRecoilState(varslerState);
 };

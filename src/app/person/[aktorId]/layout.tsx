@@ -17,11 +17,13 @@ import { useVarselOmSakErTildeltAnnenSaksbehandler } from '@hooks/useVarselOmSak
 import { AmplitudeProvider } from '@io/amplitude';
 import { usePollEtterOpptegnelser } from '@io/http';
 import { useActivePeriod } from '@state/periode';
+import { useFetchPersonQuery } from '@state/person';
 import { isBeregnetPeriode } from '@utils/typeguards';
 
 import styles from './layout.module.css';
 
 function Layout({ children }: PropsWithChildren): ReactElement {
+    useFetchPersonQuery(true);
     useRefreshPersonVedOpptegnelse();
     useFjernPersonFraApolloCache();
     usePollEtterOpptegnelser();

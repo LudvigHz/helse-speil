@@ -4,7 +4,6 @@ import React, { useRef } from 'react';
 import { Table } from '@navikt/ds-react';
 
 import { useLazyQuery } from '@apollo/client';
-import { useLoadingToast } from '@hooks/useLoadingToast';
 import { FetchPersonDocument } from '@io/graphql';
 
 import styles from './LinkRow.module.css';
@@ -25,8 +24,6 @@ export const LinkRow = ({ aktørId, children, ...rest }: LinkRowProps) => {
     const ref = useRef<HTMLTableRowElement | null>(null);
     const router = useRouter();
     const [hentPerson, { loading }] = useLazyQuery(FetchPersonDocument);
-
-    useLoadingToast({ isLoading: loading, message: 'Henter person' });
 
     const navigate = (event: React.SyntheticEvent) => {
         if (loading) {

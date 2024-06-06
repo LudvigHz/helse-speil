@@ -11,6 +11,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { usePathname } from 'next/navigation';
 import { PropsWithChildren, ReactElement, useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import ReactModal from 'react-modal';
+import { Provider as ReduxProvider } from 'react-redux';
 import { RecoilRoot, SetRecoilState } from 'recoil';
 
 import { createApolloClient } from '@/app/apollo/apolloClient';
@@ -19,11 +20,10 @@ import { initInstrumentation } from '@/observability/faro';
 import { hydrateAllFilters } from '@/routes/oversikt/table/state/filter';
 import { hydrateSorteringForTab } from '@/routes/oversikt/table/state/sortation';
 import { VenterPåEndringProvider } from '@/routes/saksbilde/VenterPåEndringContext';
-import { hydrateKanFrigiOppgaverState, hydrateTotrinnsvurderingState } from '@/state/toggles';
 import { ApolloProvider } from '@apollo/client';
-import { useLoadingToast } from '@hooks/useLoadingToast';
-import { useFetchPersonQuery } from '@state/person';
-import { useSetVarsler } from '@state/varsler';
+import { varslerSlice } from '@store/features/varsler/varslerSlice';
+import { useAppDispatch } from '@store/hooks';
+import { useStore } from '@store/use-store';
 
 dayjs.extend(relativeTime);
 dayjs.extend(minMax);
@@ -40,13 +40,12 @@ type Props = {
 };
 
 export const Providers = ({ children, bruker }: PropsWithChildren<Props>): ReactElement => {
-    const [apolloClient] = useState(() => createApolloClient());
+    const store = useStore(bruker);
+    const [apolloClient] = useState(() => createApolloClient(store));
 
     const initializeState = useCallback(
         ({ set }: { set: SetRecoilState }) => {
             if (typeof window === 'undefined') return;
-            hydrateTotrinnsvurderingState(set, bruker.grupper);
-            hydrateKanFrigiOppgaverState(set, bruker.ident);
             hydrateAllFilters(set, bruker.grupper);
             hydrateSorteringForTab(set);
         },
@@ -60,34 +59,30 @@ export const Providers = ({ children, bruker }: PropsWithChildren<Props>): React
 
     return (
         <ApolloProvider client={apolloClient}>
-            <RecoilRoot initializeState={initializeState}>
-                <SyncAlerts>
+            <ReduxProvider store={store}>
+                <RecoilRoot initializeState={initializeState}>
                     <VenterPåEndringProvider>
-                        <BrukerContext.Provider value={bruker}>{children}</BrukerContext.Provider>
+                        <BrukerContext.Provider value={bruker}>
+                            {children}
+                            <SyncAlerts />
+                        </BrukerContext.Provider>
                     </VenterPåEndringProvider>
-                </SyncAlerts>
-            </RecoilRoot>
+                </RecoilRoot>
+            </ReduxProvider>
         </ApolloProvider>
     );
 };
 
-const SyncAlerts = ({ children }: PropsWithChildren) => {
-    const { loading } = useFetchPersonQuery(true);
-
-    useLoadingToast({ isLoading: loading, message: 'Henter person' });
-
+const SyncAlerts = (): null => {
     useSyncAlertsToLocation();
-
-    return children;
+    return null;
 };
 
 const useSyncAlertsToLocation = () => {
+    const dispatch = useAppDispatch();
     const pathname = usePathname();
-    const setVarsler = useSetVarsler();
 
     useEffect(() => {
-        setVarsler((prevState) =>
-            prevState.filter((it) => it.scope === pathname || (it.name === 'tildeling' && pathname !== '/')),
-        );
-    }, [pathname, setVarsler]);
+        dispatch(varslerSlice.actions.ryddVarselForPathname(pathname));
+    }, [dispatch, pathname]);
 };

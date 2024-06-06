@@ -26,6 +26,7 @@
             "@utils/*": ["./src/utils/*"],
             "@components/*": ["./src/components/*"],
             "@state/*": ["./src/state/*"],
+            "@store/*": ["./src/store/*"],
             "@hooks/*": ["./src/hooks/*"],
             "@nais/*": ["./src/nais/*"]
         }

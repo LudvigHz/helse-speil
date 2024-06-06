@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
-
-import { Loader } from '@navikt/ds-react';
+import { useEffect, useState } from 'react';
 
 import { useMutation } from '@apollo/client';
 import { OppdaterPersonDocument, OpprettAbonnementDocument } from '@io/graphql';
 import { useHåndterOpptegnelser, useSetOpptegnelserPollingRate } from '@state/opptegnelser';
 import { useCurrentPerson } from '@state/person';
-import { useAddToast, useRemoveToast } from '@state/toasts';
 import { useAddVarsel, useRemoveVarsel } from '@state/varsler';
+import { useAddToast, useRemoveToast } from '@store/features/toasts/useToasts';
 import { SpeilError } from '@utils/error';
 
 const oppdatererPersondataToastKey = 'updating';
@@ -16,12 +14,6 @@ class PersonoppdateringAlert extends SpeilError {
     static key = 'personoppdatering';
     name = PersonoppdateringAlert.key;
 }
-
-const oppdatererPersondataMessage = () => (
-    <>
-        Oppdaterer persondata <Loader size="xsmall" variant="inverted" />
-    </>
-);
 
 export const useOppdaterPersondata = (): [forespørPersonoppdatering: () => Promise<void>] => {
     const person = useCurrentPerson() as FetchedPerson;
@@ -54,7 +46,7 @@ export const useOppdaterPersondata = (): [forespørPersonoppdatering: () => Prom
     }, []);
 
     const forespørPersonoppdatering = async (): Promise<void> => {
-        addToast({ key: oppdatererPersondataToastKey, message: oppdatererPersondataMessage() });
+        addToast({ key: oppdatererPersondataToastKey, message: 'Oppdaterer persondata', loading: true });
         removeVarsel(PersonoppdateringAlert.key);
         await opprettAbonnement({
             variables: { personidentifikator: person.aktorId },

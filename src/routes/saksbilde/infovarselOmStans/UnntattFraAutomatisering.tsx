@@ -4,7 +4,7 @@ import { Alert, BodyShort, Button, Loader, Textarea } from '@navikt/ds-react';
 
 import { Bold } from '@components/Bold';
 import { useOpphevStans } from '@state/opphevStans';
-import { useAddToast } from '@state/toasts';
+import { useAddToast } from '@store/features/toasts/useToasts';
 import { getFormattedDatetimeString } from '@utils/date';
 
 import styles from './UnntattFraAutomatisering.module.css';

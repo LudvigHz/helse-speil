@@ -2,22 +2,19 @@ import React from 'react';
 
 import { Loader } from '@navikt/ds-react';
 
-import type { ToastObject } from './toasts';
+import { ToastObject } from '@store/features/toasts/toastsSlice';
 
 export const kalkulererToastKey = 'kalkulererToast';
 
 export const kalkulererFerdigToastKey = 'kalkulererFerdigToast';
 
 export const kalkulererToast = ({
-    message = (
-        <>
-            Kalkulerer endringer <Loader size="xsmall" variant="inverted" />
-        </>
-    ),
+    message = 'Kalkulerer endringer',
     callback,
     timeToLiveMs,
 }: Partial<ToastObject>): ToastObject => ({
     key: kalkulererToastKey,
+    loading: true,
     message,
     callback,
     timeToLiveMs,

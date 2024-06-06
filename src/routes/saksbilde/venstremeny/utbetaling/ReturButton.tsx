@@ -7,7 +7,7 @@ import { useMutation } from '@apollo/client';
 import { AmplitudeContext } from '@io/amplitude';
 import { SendIReturDocument } from '@io/graphql';
 import { useCurrentPerson } from '@state/person';
-import { useAddToast } from '@state/toasts';
+import { useAddToast } from '@store/features/toasts/useToasts';
 
 import { Returnotat } from '../../notat/Returnotat';
 

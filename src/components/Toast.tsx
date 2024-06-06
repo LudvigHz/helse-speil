@@ -1,20 +1,25 @@
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
-import React from 'react';
+import React, { PropsWithChildren, ReactElement } from 'react';
+import { RecoilLoadable } from 'recoil';
+
+import { Loader } from '@navikt/ds-react';
 
 import { Feilikon } from '@components/ikoner/Feilikon';
 import { GrøntSjekkikon } from '@components/ikoner/GrøntSjekkikon';
-import { useRemoveToast } from '@state/toasts';
+import { useRemoveToast } from '@store/features/toasts/useToasts';
 
 import styles from './Toast.module.css';
 
-interface ToastProps extends ChildrenProps {
+interface ToastProps {
     id: string;
+    spinner?: boolean;
     variant?: 'success' | 'error';
 }
 
-export const Toast: React.FC<ToastProps> = ({ id, children, variant }) => {
+export const Toast = ({ id, children, variant, spinner }: PropsWithChildren<ToastProps>): ReactElement => {
     const removeToast = useRemoveToast();
+
     return (
         <motion.div
             key={id}
@@ -37,6 +42,7 @@ export const Toast: React.FC<ToastProps> = ({ id, children, variant }) => {
                 {variant === 'success' && <GrøntSjekkikon />}
                 {variant === 'error' && <Feilikon />}
                 {children}
+                {spinner && <Loader size="xsmall" variant="inverted" />}
             </button>
         </motion.div>
     );

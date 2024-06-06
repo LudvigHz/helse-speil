@@ -6,14 +6,14 @@ import { Kildetype, OpprettAbonnementDocument, OverstyrDagerMutationDocument } f
 import { useCurrentArbeidsgiver } from '@state/arbeidsgiver';
 import { useSetOpptegnelserPollingRate } from '@state/opptegnelser';
 import { useCurrentPerson } from '@state/person';
-import { useAddToast, useRemoveToast } from '@state/toasts';
+import { useAddToast, useRemoveToast } from '@store/features/toasts/useToasts';
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { tilOverstyrteDager, useOverstyrDager } from './useOverstyrDager';
 
 jest.mock('@state/person');
 jest.mock('@state/arbeidsgiver');
-jest.mock('@state/toasts');
+jest.mock('@store/features/toasts/useToasts');
 jest.mock('@state/opptegnelser');
 jest.mock('@io/http');
 

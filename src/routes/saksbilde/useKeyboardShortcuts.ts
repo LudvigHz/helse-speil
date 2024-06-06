@@ -3,7 +3,7 @@ import { copyString } from '@components/clipboard/util';
 import { Action, Key, useKeyboard } from '@hooks/useKeyboard';
 import { useNavigation } from '@hooks/useNavigation';
 import { useFetchPersonQuery } from '@state/person';
-import { useAddToast } from '@state/toasts';
+import { useAddToast } from '@store/features/toasts/useToasts';
 import { isPerson } from '@utils/typeguards';
 
 const useCurrentFødselsnummer = (): string | null => {

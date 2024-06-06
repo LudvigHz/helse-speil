@@ -5,12 +5,13 @@ import { MockedProvider } from '@apollo/client/testing';
 import { OpprettAbonnementDocument, OverstyrInntektOgRefusjonMutationDocument } from '@io/graphql';
 import { kalkulererFerdigToastKey, kalkulererToastKey } from '@state/kalkuleringstoasts';
 import { useHåndterOpptegnelser, useSetOpptegnelserPollingRate } from '@state/opptegnelser';
-import { ToastObject, useAddToast, useRemoveToast } from '@state/toasts';
+import { ToastObject } from '@store/features/toasts/toastsSlice';
+import { useAddToast, useRemoveToast } from '@store/features/toasts/useToasts';
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { usePostOverstyrtInntektOgRefusjon } from './usePostOverstyrtInntektOgRefusjon';
 
-jest.mock('@state/toasts');
+jest.mock('@store/features/toasts/useToasts');
 jest.mock('@state/opptegnelser', () => ({
     ...jest.requireActual('@state/opptegnelser'),
     useHåndterOpptegnelser: jest.fn(),

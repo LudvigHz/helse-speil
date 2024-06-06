@@ -8,7 +8,6 @@ import { Alert } from '@navikt/ds-react';
 import { BehandletIdagTable } from '@/routes/oversikt/table/BehandletIdagTable';
 import { EmojiTilbakemelding } from '@components/flexjar/EmojiTilbamelding';
 import { Widget } from '@components/flexjar/Widget';
-import { useLoadingToast } from '@hooks/useLoadingToast';
 import { useOppgaveFeed } from '@state/oppgaver';
 import { onLazyLoadFail } from '@utils/error';
 
@@ -36,7 +35,6 @@ export const Oversikt = () => {
     const aktivTab = useAktivTab();
     const { allFilters } = useFilters();
 
-    useLoadingToast({ isLoading: oppgaveFeed.loading, message: 'Henter oppgaver' });
     useKeyboardShortcuts();
 
     return (
