@@ -3,7 +3,7 @@ import React, { PropsWithChildren } from 'react';
 import { Tooltip } from '@navikt/ds-react';
 
 import { Arbeidsgiverikon } from '@components/ikoner/Arbeidsgiverikon';
-import { useIsAnonymous } from '@state/anonymization';
+import { useAppSelector } from '@store/hooks';
 
 interface ArbeidsgiverikonMedTooltipProps {
     tooltipTekst?: Maybe<string>;
@@ -17,7 +17,7 @@ export const ArbeidsgiverikonMedTooltip = ({
     onClick,
     children,
 }: PropsWithChildren<ArbeidsgiverikonMedTooltipProps>) => {
-    const erAnonymisert = useIsAnonymous();
+    const erAnonymisert = useAppSelector((state) => state.anonymisering);
 
     return (
         <Tooltip content={tooltipTekst && !erAnonymisert ? tooltipTekst : 'Arbeidsgiver'}>

@@ -2,7 +2,6 @@ import { ApolloWrapper } from '@test-wrappers';
 import fetchMock from 'jest-fetch-mock';
 import React from 'react';
 
-import { useIsAnonymous } from '@state/anonymization';
 import {
     useArbeidsgiver,
     useEndringerForPeriode,
@@ -57,7 +56,6 @@ describe('SykepengegrunnlagFraSpleis', () => {
         });
         (useCurrentPerson as jest.Mock).mockReturnValue(person);
         (useVilkårsgrunnlag as jest.Mock).mockReturnValue(vilkårsgrunnlag);
-        (useIsAnonymous as jest.Mock).mockReturnValue(false);
         (useReadonly as jest.Mock).mockReturnValue({ value: false, override: false });
 
         render(

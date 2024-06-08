@@ -9,7 +9,15 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import minMax from 'dayjs/plugin/minMax';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { usePathname } from 'next/navigation';
-import { PropsWithChildren, ReactElement, useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import {
+    CSSProperties,
+    PropsWithChildren,
+    ReactElement,
+    useCallback,
+    useEffect,
+    useLayoutEffect,
+    useState,
+} from 'react';
 import ReactModal from 'react-modal';
 import { Provider as ReduxProvider } from 'react-redux';
 import { RecoilRoot, SetRecoilState } from 'recoil';
@@ -20,9 +28,10 @@ import { initInstrumentation } from '@/observability/faro';
 import { hydrateAllFilters } from '@/routes/oversikt/table/state/filter';
 import { hydrateSorteringForTab } from '@/routes/oversikt/table/state/sortation';
 import { VenterPåEndringProvider } from '@/routes/saksbilde/VenterPåEndringContext';
+import { anonymiseringSlice } from '@/store/features/anonymisering/anonymiseringSlice';
 import { ApolloProvider } from '@apollo/client';
 import { varslerSlice } from '@store/features/varsler/varslerSlice';
-import { useAppDispatch } from '@store/hooks';
+import { useAppDispatch, useAppSelector } from '@store/hooks';
 import { useStore } from '@store/use-store';
 
 dayjs.extend(relativeTime);
@@ -49,7 +58,7 @@ export const Providers = ({ children, bruker }: PropsWithChildren<Props>): React
             hydrateAllFilters(set, bruker.grupper);
             hydrateSorteringForTab(set);
         },
-        [bruker.grupper, bruker.ident],
+        [bruker.grupper],
     );
 
     useLayoutEffect(() => {
@@ -62,15 +71,47 @@ export const Providers = ({ children, bruker }: PropsWithChildren<Props>): React
             <ReduxProvider store={store}>
                 <RecoilRoot initializeState={initializeState}>
                     <VenterPåEndringProvider>
-                        <BrukerContext.Provider value={bruker}>
-                            {children}
-                            <SyncAlerts />
-                        </BrukerContext.Provider>
+                        <CssVariablesProvider>
+                            <BrukerContext.Provider value={bruker}>
+                                {children}
+                                <SyncAlerts />
+                            </BrukerContext.Provider>
+                        </CssVariablesProvider>
                     </VenterPåEndringProvider>
                 </RecoilRoot>
             </ReduxProvider>
         </ApolloProvider>
     );
+};
+
+const CssVariablesProvider = ({ children }: PropsWithChildren<{}>): ReactElement => {
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        // Hydrer sessionStorage verdi for anonymisering "lazily" sindre SSR issues, fordi serveren vet ikke hva som er i sessionStorage
+        const anonymisering = sessionStorage.getItem('anonymisering');
+        if (anonymisering) {
+            const anonymiseringBool = anonymisering === 'true';
+            dispatch(anonymiseringSlice.actions.set(anonymiseringBool));
+        }
+    }, [dispatch]);
+
+    const anomizedStyle = {
+        '--anonymizable-background': 'var(--anonymous-background)',
+        '--anonymizable-color': 'var(--anonymous-color)',
+        '--anonymizable-border-radius': 'var(--anonymous-border-radius)',
+        '--anonymizable-opacity': 'var(--anonymous-opacity)',
+    } as CSSProperties;
+
+    const visibleStyle: CSSProperties = {
+        '--anonymizable-background': 'var(--visible-background)',
+        '--anonymizable-color': 'var(--visible-color)',
+        '--anonymizable-border-radius': 'var(--visible-border-radius)',
+        '--anonymizable-opacity': 'var(--visible-opacity)',
+    } as CSSProperties;
+
+    const anonymisering = useAppSelector((state) => state.anonymisering);
+
+    return <div style={anonymisering ? anomizedStyle : visibleStyle}>{children}</div>;
 };
 
 const SyncAlerts = (): null => {

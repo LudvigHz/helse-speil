@@ -6,8 +6,8 @@ import { BodyShort } from '@navikt/ds-react';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import { LoadingShimmer } from '@components/LoadingShimmer';
 import { Kjonn } from '@io/graphql';
-import { useIsAnonymous } from '@state/anonymization';
 import { useCurrentPerson, useFetchPersonQuery } from '@state/person';
+import { useAppSelector } from '@store/hooks';
 
 import { GenderIcon } from './GenderIcon';
 import { PersonHeaderWithContent } from './PersonHeaderWIthContent';
@@ -16,7 +16,7 @@ import styles from './PersonHeader.module.css';
 
 const PersonHeaderContainer: React.FC = () => {
     const currentPerson = useCurrentPerson();
-    const isAnonymous = useIsAnonymous();
+    const isAnonymous = useAppSelector((state) => state.anonymisering);
     const { loading } = useFetchPersonQuery();
 
     if (loading) {
