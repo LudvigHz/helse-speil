@@ -20,15 +20,6 @@
         "prepare": "husky",
         "lint-staged": "lint-staged"
     },
-    "lint-staged": {
-        "*.{js,jsx,ts,tsx,css,json,md}": [
-            "prettier --write"
-        ],
-        "*.{js,jsx,ts,tsx}": [
-            "eslint --fix --rule react-hooks/exhaustive-deps:off",
-            "npm run tsc -- --noEmit"
-        ]
-    },
     "dependencies": {
         "@amplitude/analytics-browser": "^2.8.1",
         "@apollo/client": "^3.10.4",
